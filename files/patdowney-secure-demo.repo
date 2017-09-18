@@ -1,0 +1,6 @@
+[patdowney-secure-demo]
+name=patdowney-secure-demo
+baseurl=https://dl.bintray.com/patdowney/secure-demo-yum
+enabled=True
+gpgcheck=False
+repo_gpgcheck=False

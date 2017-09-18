@@ -1,0 +1,6 @@
+[patdowney-rpm]
+name=patdowney-rpm
+baseurl=https://dl.bintray.com/patdowney/rpm
+enabled=True
+gpgcheck=False
+repo_gpgcheck=False

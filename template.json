@@ -1,0 +1,47 @@
+{
+  "builders": [
+    {
+      "type": "amazon-ebs",
+      "region": "us-east-1",
+      "source_ami": "ami-ae7bfdb8",
+      "instance_type": "t2.micro",
+      "ssh_username": "centos",
+      "ami_name": "secure-demo-{{timestamp}}",
+      "subnet_id": "subnet-b88526e1",
+      "associate_public_ip_address": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "files/patdowney-secure-demo.repo",
+      "destination": "/tmp/patdowney-secure-demo.repo"
+    },
+    {
+      "type": "file",
+      "source": "files/patdowney-rpm.repo",
+      "destination": "/tmp/patdowney-rpm.repo"
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "inline": [
+        "mv /tmp/patdowney-secure-demo.repo /etc/yum.repos.d/patdowney-secure-demo.repo",
+        "mv /tmp/patdowney-rpm.repo /etc/yum.repos.d/patdowney-rpm.repo",
+        "yum install -y epel-release",
+        "yum install -y https://yum.puppetlabs.com/puppet/puppet5-release-el-7.noarch.rpm",
+        "yum install -y puppet-agent",
+        "yum install -y secure-demo-hiera",
+        "yum install -y secure-demo-puppet"
+      ]
+    },
+    {
+      "type": "shell",
+      "execute_command": "sudo sh -c '{{ .Vars }} {{ .Path }}'",
+      "environment_vars":  [
+	"FACTER_role=base"
+      ],
+      "inline": [ "/usr/share/secure-demo-puppet/bin/apply" ]
+    }
+  ]
+}
